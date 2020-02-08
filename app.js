@@ -1,9 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+const bodyparser = require('body-parser');
+
 require('dotenv/config');
 
+//Import post routes
+const postsRoute = require('./routes/posts');
+
+
+
 //middleware
+app.use(bodyparser.json());
 
 //app.use('/posts', () => {
 //    console.log('THis is some middleware running');
@@ -16,9 +24,8 @@ app.get('/', (req,res) => {
     res.send('We are on home page');    
 });
 
-app.get('/posts', (req,res) => {
-    res.send('We are on post page');    
-});
+app.use('/posts', postsRoute);
+
 
 //Conect to MongoDB
 mongoose.connect(
