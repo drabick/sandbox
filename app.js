@@ -1,35 +1,37 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const app = express();
 const bodyparser = require('body-parser');
-const exphbs = require('express-handlebars');
-
+const handlebars = require('express-handlebars');
+const app = express();
 require('dotenv/config');
 
 //Import post routes
 const postsRoute = require('./routes/posts');
-
-
+//Import gets routes
+const getsRoute = require('./routes/gets');
 
 //middleware
 app.use(bodyparser.json());
-
-//app.use('/posts', () => {
-//    console.log('THis is some middleware running');
-//})
-
-//Handlebar engine
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
-
-
-//routes
-app.get('/', (req,res) => {
-    res.send('We are on home page');    
-});
-
+app.use('/gets', getsRoute);
 app.use('/posts', postsRoute);
 
+//Handlebar engine
+//Sets handlebars configurations (we will go through them later on)
+app.engine('handlebars', handlebars({
+    layoutsDir: __dirname + '/views/layouts',
+    }));
+app.set('view engine', 'handlebars');
+
+//routes
+//app.get('/', (req,res) => {
+//    res.send('We are on home page');    
+//});
+
+//load index layout and fill it with main html data into body
+app.get('/', (req, res) => {
+    //Serves the body of the page aka "main.handlebars" to the container //aka "index.handlebars"
+    res.render('main', {layout : 'index'});
+    });
 
 //Conect to MongoDB
 mongoose.connect(
@@ -39,7 +41,6 @@ mongoose.connect(
     () => 
     console.log('Connected to MongoDB')
 );
-
 
 // lisgerner
 
