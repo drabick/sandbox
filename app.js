@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const bodyparser = require('body-parser');
+const exphbs = require('express-handlebars');
 
 require('dotenv/config');
 
@@ -17,6 +18,9 @@ app.use(bodyparser.json());
 //    console.log('THis is some middleware running');
 //})
 
+//Handlebar engine
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 
 
 //routes
